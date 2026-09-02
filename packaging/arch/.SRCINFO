@@ -19,6 +19,6 @@ pkgbase = bulk-edit-calendar
 	depends = python-keyring
 	depends = python-platformdirs
 	source = bulk-edit-calendar-0.1.0.tar.gz::https://github.com/chrisbuchanpham/Bulk-Edit-Calendar-CachyOS/archive/refs/tags/v0.1.0.tar.gz
-	sha256sums = SKIP
+	sha256sums = 55f03afdb17d203c3ba53d8956e158fbb2c7109f110a402bcf3871e2168a809e
 
 pkgname = bulk-edit-calendar

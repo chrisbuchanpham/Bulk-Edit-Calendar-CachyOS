@@ -68,13 +68,14 @@ The app requests only `calendar.events` and `calendar.calendarlist.readonly`. Th
 
 ## CachyOS package build
 
-The included `PKGBUILD` is intended for release tags. After a `v0.1.0` release exists:
+The included `packaging/arch/PKGBUILD` is intended for release tags. Build from its isolated directory so Arch's build workspace cannot collide with the Python `src/` directory:
 
 ```bash
+cd packaging/arch
 makepkg --syncdeps --install
 ```
 
-Before publishing a package, replace `SKIP` with the release archive's SHA-256 checksum and increment `pkgrel` for packaging-only changes.
+The source archive is pinned by SHA-256. Increment `pkgrel` for packaging-only changes and regenerate `.SRCINFO` whenever `PKGBUILD` changes.
 
 ## Clean-room origin
 

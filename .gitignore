@@ -7,8 +7,14 @@ htmlcov/
 .venv/
 dist/
 build/
+/*.tar.gz
+/*.pkg.tar.*
 credentials.json
 token.json
 .env
 *.log
 pkg/
+packaging/arch/src/
+packaging/arch/pkg/
+packaging/arch/*.tar.gz
+packaging/arch/*.pkg.tar.*
