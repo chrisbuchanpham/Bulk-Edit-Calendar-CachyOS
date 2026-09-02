@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Bulk Edit Calendar</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="brand-mark" aria-hidden="true"><span>31</span></div>
+    <div>
+      <p class="eyebrow">LOCAL CALENDAR TOOL</p>
+      <h1>Bulk Edit Calendar</h1>
+      <p>Find the right events, preview every change, then apply once.</p>
+    </div>
+    <div id="connectionBadge" class="badge">Checking connection…</div>
+  </header>
+
+  <main>
+    <section id="setupPanel" class="panel hidden">
+      <div class="section-heading">
+        <div><span class="step">1</span><h2>Connect Google Calendar</h2></div>
+        <p>Your credentials and Calendar data stay on this computer.</p>
+      </div>
+      <ol class="setup-list">
+        <li>Create a Google Cloud project and enable the Google Calendar API.</li>
+        <li>Create an OAuth client with application type <strong>Desktop app</strong>.</li>
+        <li>Download its JSON file, choose it below, then authorize in your browser.</li>
+      </ol>
+      <div class="button-row">
+        <label class="file-button">Choose credentials.json<input id="credentialFile" type="file" accept="application/json,.json"></label>
+        <button id="connectButton" class="primary" disabled>Connect Google account</button>
+      </div>
+      <p id="authMessage" class="message"></p>
+    </section>
+
+    <div id="workspace" class="hidden">
+      <section class="panel">
+        <div class="section-heading">
+          <div><span class="step">1</span><h2>Choose events</h2></div>
+          <button id="logoutButton" class="ghost danger">Disconnect</button>
+        </div>
+        <div class="grid three">
+          <label>Calendars<select id="calendarIds" multiple size="5"></select></label>
+          <fieldset><legend>Date range</legend>
+            <label class="inline"><input name="rangeMode" type="radio" value="relative" checked> Relative</label>
+            <label class="inline"><input name="rangeMode" type="radio" value="absolute"> Absolute</label>
+            <div id="relativeRange" class="two compact">
+              <label>Days before<input id="daysBefore" type="number" min="0" value="0"></label>
+              <label>Days after<input id="daysAfter" type="number" min="0" value="30"></label>
+            </div>
+            <div id="absoluteRange" class="two compact hidden">
+              <label>Start<input id="rangeStart" type="datetime-local"></label>
+              <label>End<input id="rangeEnd" type="datetime-local"></label>
+            </div>
+            <label>Time zone<input id="timezone" value="UTC" list="timezones"></label>
+            <datalist id="timezones"><option>UTC</option><option>America/Toronto</option><option>America/New_York</option><option>Europe/London</option><option>Asia/Tokyo</option></datalist>
+          </fieldset>
+          <fieldset><legend>Event kinds</legend>
+            <label>Timing<select id="timing"><option value="any">Any</option><option value="timed">Timed</option><option value="all_day">All-day</option></select></label>
+            <label>Recurrence filter<select id="recurrenceFilter"><option value="any">Any</option><option value="single">Single events</option><option value="recurring">Recurring events</option></select></label>
+            <label>Apply recurring changes to<select id="recurrenceMode"><option value="occurrences">Selected occurrences</option><option value="series">Whole series</option></select></label>
+          </fieldset>
+        </div>
+        <details>
+          <summary>Advanced filters</summary>
+          <div id="textFilters" class="grid two"></div>
+          <div class="grid two">
+            <label>Visibility<select id="visibilityFilter" multiple size="4"><option>default</option><option>public</option><option>private</option><option>confidential</option></select></label>
+            <label>Event types<select id="eventTypes" multiple size="6"><option value="default">Standard</option><option value="birthday">Birthday</option><option value="focusTime">Focus time</option><option value="fromGmail">From Gmail</option><option value="outOfOffice">Out of office</option><option value="workingLocation">Working location</option></select></label>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading"><div><span class="step">2</span><h2>Describe changes</h2></div><p>Deletion cannot be combined with other edits.</p></div>
+        <div class="grid three">
+          <fieldset><legend>Text</legend>
+            <label>Set title<input id="titleSet" placeholder="Leave blank to keep"></label>
+            <label>Find in title<input id="titleFind"></label>
+            <label>Replace with<input id="titleReplace"></label>
+            <label class="inline"><input id="titleCase" type="checkbox"> Case-sensitive replacement</label>
+            <label>Description<select id="descriptionMode"><option value="keep">Keep</option><option value="replace">Replace</option><option value="append">Append</option></select></label>
+            <label>Description text<textarea id="descriptionValue" rows="3"></textarea></label>
+            <label>Set location<input id="locationSet" placeholder="Leave blank to keep"></label>
+          </fieldset>
+          <fieldset><legend>Time &amp; privacy</legend>
+            <label>Shift by minutes<input id="shiftMinutes" type="number" placeholder="Negative moves earlier"></label>
+            <label>Set duration (minutes)<input id="durationMinutes" type="number" min="1"></label>
+            <label>Adjust duration (minutes)<input id="durationDelta" type="number"></label>
+            <label>Visibility<select id="visibility"><option value="">Keep</option><option value="default">Default</option><option value="public">Public</option><option value="private">Private</option><option value="confidential">Confidential</option></select></label>
+            <label>Move to calendar<select id="destination"><option value="">Do not move</option></select></label>
+            <label>Notify attendees<select id="notifications"><option value="none">Do not notify</option><option value="externalOnly">External guests only</option><option value="all">All guests</option></select></label>
+          </fieldset>
+          <fieldset><legend>Reminders &amp; deletion</legend>
+            <label class="inline"><input id="replaceReminders" type="checkbox"> Replace reminders</label>
+            <div class="two compact"><label>Method<select id="reminderMethod"><option value="popup">Popup</option><option value="email">Email</option></select></label><label>Minutes before<input id="reminderMinutes" type="number" min="0" max="40320" value="10"></label></div>
+            <button id="addReminder" class="secondary" type="button">Add reminder</button>
+            <div id="reminderList" class="chips"></div>
+            <hr>
+            <label class="inline danger-text"><input id="deleteEvents" type="checkbox"> Permanently delete selected events</label>
+          </fieldset>
+        </div>
+        <details>
+          <summary>Presets</summary>
+          <div class="button-row"><select id="presetSelect"><option value="">Choose a preset…</option></select><input id="presetName" placeholder="Preset name"><button id="savePreset" class="secondary">Save current setup</button><button id="deletePreset" class="ghost danger">Delete preset</button></div>
+        </details>
+        <div class="button-row end"><button id="previewButton" class="primary">Preview matching events</button></div>
+        <p id="actionMessage" class="message"></p>
+      </section>
+
+      <section id="previewPanel" class="panel hidden">
+        <div class="section-heading"><div><span class="step">3</span><h2>Review and apply</h2></div><p id="previewSummary"></p></div>
+        <div id="previewWarnings" class="warning hidden"></div>
+        <div class="table-wrap"><table><thead><tr><th><input id="selectAll" type="checkbox" checked aria-label="Select all"></th><th>Event</th><th>Start</th><th>Type</th><th>Location</th><th>Move</th></tr></thead><tbody id="previewRows"></tbody></table></div>
+        <div id="deleteConfirmWrap" class="warning hidden"><label>Deletion is irreversible. Type <strong id="deletePhrase"></strong><input id="deleteConfirmation"></label></div>
+        <div class="button-row end"><button id="applyButton" class="primary">Apply to selected events</button></div>
+      </section>
+
+      <section id="resultsPanel" class="panel hidden">
+        <div class="section-heading"><div><span class="step">4</span><h2>Results</h2></div><button id="undoButton" class="secondary hidden">Undo this operation</button></div>
+        <div id="results"></div>
+      </section>
+    </div>
+  </main>
+  <footer>Runs locally on 127.0.0.1 · No telemetry · Calendar content is not stored</footer>
+</body>
+</html>
+

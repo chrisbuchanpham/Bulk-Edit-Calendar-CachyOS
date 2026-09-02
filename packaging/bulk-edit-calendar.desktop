@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Bulk Edit Calendar
+Comment=Preview and edit Google Calendar events in bulk
+Exec=bulk-edit-calendar
+Icon=io.github.chrisbuchanpham.BulkEditCalendar
+Terminal=false
+Categories=Office;Utility;
+Keywords=Google;Calendar;Events;Bulk;
+

@@ -1,0 +1,24 @@
+pkgbase = bulk-edit-calendar
+	pkgdesc = Local, privacy-conscious bulk editor for Google Calendar
+	pkgver = 0.1.0
+	pkgrel = 1
+	url = https://github.com/chrisbuchanpham/Bulk-Edit-Calendar-CachyOS
+	arch = any
+	license = MIT
+	makedepends = python-build
+	makedepends = python-installer
+	makedepends = python-hatchling
+	makedepends = python-wheel
+	depends = python
+	depends = python-fastapi
+	depends = uvicorn
+	depends = python-jinja
+	depends = python-pydantic
+	depends = python-google-api-python-client
+	depends = python-google-auth-oauthlib
+	depends = python-keyring
+	depends = python-platformdirs
+	source = bulk-edit-calendar-0.1.0.tar.gz::https://github.com/chrisbuchanpham/Bulk-Edit-Calendar-CachyOS/archive/refs/tags/v0.1.0.tar.gz
+	sha256sums = SKIP
+
+pkgname = bulk-edit-calendar
