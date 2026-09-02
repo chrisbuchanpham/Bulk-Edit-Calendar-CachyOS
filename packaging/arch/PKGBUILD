@@ -1,7 +1,7 @@
 # Maintainer: Chris Buchan Pham
 pkgname=bulk-edit-calendar
 pkgver=0.1.0
-pkgrel=1
+pkgrel=3
 _commit=d04c1d57ede23a47e90ea8cc98f8a63395196334
 pkgdesc="Local, privacy-conscious bulk editor for Google Calendar"
 arch=('any')
@@ -21,6 +21,11 @@ build() {
 
 package() {
   cd "Bulk-Edit-Calendar-CachyOS-$_commit"
-  python -m installer --destdir="$pkgdir" dist/*.whl
+  python -m installer --destdir="$pkgdir" --prefix=/usr dist/*.whl
+  rm -rf "$pkgdir"/usr/lib/python*/site-packages/share
+  install -Dm644 packaging/bulk-edit-calendar.desktop \
+    "$pkgdir/usr/share/applications/bulk-edit-calendar.desktop"
+  install -Dm644 packaging/io.github.chrisbuchanpham.BulkEditCalendar.svg \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/io.github.chrisbuchanpham.BulkEditCalendar.svg"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

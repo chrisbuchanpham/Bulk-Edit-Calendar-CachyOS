@@ -1,7 +1,7 @@
 pkgbase = bulk-edit-calendar
 	pkgdesc = Local, privacy-conscious bulk editor for Google Calendar
 	pkgver = 0.1.0
-	pkgrel = 1
+	pkgrel = 3
 	url = https://github.com/chrisbuchanpham/Bulk-Edit-Calendar-CachyOS
 	arch = any
 	license = MIT
