@@ -75,7 +75,7 @@ cd packaging/arch
 makepkg --syncdeps --install
 ```
 
-The source archive is pinned by SHA-256. Increment `pkgrel` for packaging-only changes and regenerate `.SRCINFO` whenever `PKGBUILD` changes.
+The package source is pinned to the audited application commit and its SHA-256 checksum. Increment `pkgrel` for packaging-only changes and regenerate `.SRCINFO` whenever `PKGBUILD` changes.
 
 ## Clean-room origin
 

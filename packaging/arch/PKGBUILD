@@ -2,6 +2,7 @@
 pkgname=bulk-edit-calendar
 pkgver=0.1.0
 pkgrel=1
+_commit=d04c1d57ede23a47e90ea8cc98f8a63395196334
 pkgdesc="Local, privacy-conscious bulk editor for Google Calendar"
 arch=('any')
 url="https://github.com/chrisbuchanpham/Bulk-Edit-Calendar-CachyOS"
@@ -10,16 +11,16 @@ depends=('python' 'python-fastapi' 'uvicorn' 'python-jinja' 'python-pydantic'
          'python-google-api-python-client' 'python-google-auth-oauthlib'
          'python-keyring' 'python-platformdirs')
 makedepends=('python-build' 'python-installer' 'python-hatchling' 'python-wheel')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('55f03afdb17d203c3ba53d8956e158fbb2c7109f110a402bcf3871e2168a809e')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/$_commit.tar.gz")
+sha256sums=('f640dc99da566d94ba01509466a5161e9e6130a8522f80832eabc1c7ce993661')
 
 build() {
-  cd "Bulk-Edit-Calendar-CachyOS-$pkgver"
+  cd "Bulk-Edit-Calendar-CachyOS-$_commit"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "Bulk-Edit-Calendar-CachyOS-$pkgver"
+  cd "Bulk-Edit-Calendar-CachyOS-$_commit"
   python -m installer --destdir="$pkgdir" dist/*.whl
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
